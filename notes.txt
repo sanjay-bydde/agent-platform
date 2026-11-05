@@ -1,0 +1,244 @@
+1) Software Installation
+    Install Python 3.12
+
+    mac book
+
+    > python3 --version
+    > python3 -m pip --version
+
+    ----------------------------------
+
+    Install Node.js and npm
+
+    ----------------------------------
+
+    VSCode with AutoSave
+
+    ----------------------------------
+
+    VSCode Extensions
+
+    ----------------------------------
+
+    Install Git
+
+    ----------------------------------
+
+    Create Repository
+
+    https://github.com/toolsknowledge/vpro-agent-platform.git
+
+    -----------------------------------
+
+    Docker Desktop
+
+    -----------------------------------
+
+    Install AWS CLI
+
+    -----------------------------------
+
+    Aws Account 
+
+    -----------------------------------
+
+    Install Postman
+
+    -----------------------------------
+
+    Verification (MAC Book)
+    ***********************
+    python3 --version
+    python3 -m pip --version
+    node --version
+    npm --version
+    git --version
+    docker --version
+    docker compose version
+    aws --version
+    code --version
+
+
+Windows
+*******
+python --version
+python -m pip --version
+node --version
+npm --version
+git --version
+docker --version
+docker compose version
+aws --version
+code --version
+
+
+Day - 2
+*******
+1) npm create vite@latest frontend -- --template react
+
+
+new terminal
+2) > vpro-skill-agent
+   > mkdir backend
+   > cd backend
+   > mkdir app
+
+
+3) create requirements.txt
+    backend
+        requirements.txt
+
+ 
+4) cd backend
+   python3 -m venv venv
+   source venv/bin/activate (mac)
+   venv\Scripts\activate (Windows)
+   python -m pip install -r requirements.txt
+
+5) create main.py
+    backend
+         app 
+            main.py
+
+
+6) start server
+    > cd backend
+    python -m uvicorn app.main:app --reload
+
+    http://127.0.0.1:8000/docs
+
+7) modify
+        frontend/src/App.jsx
+        frontend/src/index.css
+
+        vpro-skill-agent/.gitignore
+
+
+8) cd frontend
+   npm run dev (start frontend)
+   backend also must be in running state
+   http://localhost:5173
+
+
+9) vpro-skill-agent
+        docker-compose.yml
+
+
+10) test the docker
+
+        > vpro-skill-agent
+        > docker compose up -d
+        > docker ps
+        > docker exec -it vpro-postgres psql -U vpro_user -d vpro_agent_db
+        > SELECT current_database();
+        > SELECT current_user;
+        > \l
+        > \q
+
+        ----------------------
+        docker compose down
+        docker compose up -d
+        docker ps
+
+Day - 3
+*******
+enable pgvector extension
+> docker exec -it vpro-postgres psql -U vpro_user -d vpro_agent_db
+
+> CREATE EXTENSION IF NOT EXISTS vector;
+
+SELECT extname, extversion
+FROM pg_extension
+WHERE extname = 'vector';
+
+\q
+
+------------------------------
+create requirements.txt
+    vpro-skill-agent
+        backend
+            requirements.txt
+
+    > cd backend
+    > source venv/bin/activate
+    > python -m pip install -r requirements.txt
+
+    python -m pip show sqlalchemy
+    python -m pip show psycopg
+    python -m pip show python-dotenv
+-------------------------------
+
+create .env file
+    backend
+        .env
+
+
+DATABASE_URL=postgresql+psycopg://vpro_user:vpro_password@localhost:5433/vpro_agent_db
+
+----------------------------------
+
+create database.py
+backend
+    app
+        database.py (db conf)
+        models.py (table info)
+        main.py (replace old code with latest code) (connect db to fastapi)
+
+docker ps
+python -m uvicorn app.main:app --reload
+http://127.0.0.1:8000/api/db-health
+http://127.0.0.1:8000/api/vector-health
+http://127.0.0.1:8000/api/documents/table-health
+
+docker exec -it vpro-postgres psql -U vpro_user -d vpro_agent_db
+\dt
+\d documents
+\q
+
+--------------------------------------------
+modify 
+    backend
+        requirements.txt (replace old libraries with latest libraries)
+
+        app
+            main.py (replace old endpoints with latest end poins)
+            models.py (replace)
+
+        > python -m pip install -r requirements.txt
+
+    frontend
+        src 
+            App.jsx
+            index.css
+
+Execute
+*******
+Terminal - 1
+docker compose down
+docker compose up -d
+docker ps
+
+
+Terminal - 2
+cd backend
+python -m uvicorn app.main:app --reload
+
+
+Terminal-3
+cd frontend
+npm run dev
+
+http://localhost:5173
+
+
+Testing
+create python_notes.txt (Root Folder)
+
+docker exec -it vpro-postgres psql -U vpro_user -d vpro_agent_db
+
+SELECT * FROM documents;
+
+SELECT filename, content
+FROM documents;
+
+\q
